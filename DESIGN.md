@@ -1,6 +1,6 @@
-# Cachew — Design Document
+# RedisDiy — Design Document
 
-Cachew is a small Redis-compatible, in-memory key–value server written in C++23. It is a learning project. It speaks a subset of RESP2 over TCP, so `redis-cli` can talk to it.
+RedisDiy is a small Redis-compatible, in-memory key–value server written in C++23. It is a learning project. It speaks a subset of RESP2 over TCP, so `redis-cli` can talk to it.
 
 ## 1. Goals and non-goals
 
@@ -251,14 +251,14 @@ Exceptions are reserved for startup failures such as a bind error. They never es
 
 - C++23, CMake 3.25 or newer, with presets for debug and release.
 - Warnings: `-Wall -Wextra -Wpedantic -Wconversion -Wshadow`.
-- A static library `cachew_core` (resp, store, commands) is linked by both the server binary (`cachew`) and the tests.
+- A static library `RedisDiy_core` (resp, store, commands) is linked by both the server binary (`RedisDiy`) and the tests.
 - Test framework: GoogleTest, fetched with CMake `FetchContent`.
 - Check C++23 library support early: `std::expected` needs libc++ 17+ or GCC 12+, and `std::print` needs libc++ 17+ or GCC 14+. Fall back to `iostream` if needed.
 
 ### Layout
 
 ```text
-cachew/
+RedisDiy/
   CMakeLists.txt
   DESIGN.md
   src/
@@ -286,7 +286,7 @@ The order is network-first: a real client (`redis-cli`) talks to the server from
 
 ### Milestone 0: Project setup
 - CMake project with presets (debug, release), warnings, and GoogleTest via `FetchContent`.
-- Targets: `cachew_core` library, the `cachew` server binary, and the test binary, all with trivial `main`s.
+- Targets: `RedisDiy_core` library, the `RedisDiy` server binary, and the test binary, all with trivial `main`s.
 - Confirm C++23 library support (`std::expected`) on the chosen compiler.
 
 ### Milestone 1: Client-server connection

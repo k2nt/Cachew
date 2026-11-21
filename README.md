@@ -1,12 +1,12 @@
-# Cachew
+# RedisDiy
 
-Cachew is a small Redis-compatible, in-memory key–value server written in C++23. It is a learning project: the goal is to understand networking, protocol parsing, and server design by building each piece by hand.
+RedisDiy is a small Redis-compatible, in-memory key–value server written in C++23. It is a learning project: the goal is to understand networking, protocol parsing, and server design by building each piece by hand.
 
 It speaks a subset of RESP2 over TCP, so `redis-cli` can talk to it.
 
-> **Status:** Design phase. No code exists yet. See [DESIGN.md](./DESIGN.md) for the full design and milestone plan.
+> **Status:** Milestone 0 scaffold. The executable starts and exits; networking and commands are not implemented yet. See [DESIGN.md](./DESIGN.md) for the full design and milestone plan.
 
-## Supported commands
+## Planned commands
 
 | Command | Behavior |
 |---|---|
@@ -23,19 +23,32 @@ Command names are case-insensitive. Planned later: `SET` options `EX`, `PX`, `NX
 
 ## Not supported
 
-Persistence, replication, clustering, auth, TLS, pub/sub, transactions, lists/hashes/sets, inline (plain-text) commands, and multithreaded command execution. Cachew has no auth and binds to localhost only; do not expose it to a network.
+Persistence, replication, clustering, auth, TLS, pub/sub, transactions, lists/hashes/sets, inline (plain-text) commands, and multithreaded command execution. RedisDiy has no auth and binds to localhost only; do not expose it to a network.
 
 ## Build and run
 
-Not available yet. Once Milestone 0 lands:
+Requires GNU GCC 16 (`gcc-16` and `g++-16` on `PATH`), CMake 3.25+, Ninja, and Git.
+The first configure downloads GoogleTest, so internet access is required.
 
 ```sh
-cmake --preset release && cmake --build --preset release
-./build/release/cachew --port 5123   # default port 5123
-redis-cli -p 5123 PING
+cmake --preset debug
+cmake --build --preset debug
+ctest --preset debug
+./build/debug/RedisDiy
 ```
 
-Requires a C++23 compiler, CMake 3.25+, and `redis-cli` for testing.
+Replace `debug` with `release` for an optimized build.
+If switching from a previously configured compiler, configure with
+`cmake --fresh --preset debug`.
+
+The presets select GNU g++ directly, without invoking Homebrew. For a different
+installed GNU compiler version, override it when configuring:
+
+```sh
+cmake --fresh --preset debug -DCMAKE_C_COMPILER=gcc-15 -DCMAKE_CXX_COMPILER=g++-15
+```
+
+`redis-cli` will be needed for manual testing once networking is implemented.
 
 ## Docs
 

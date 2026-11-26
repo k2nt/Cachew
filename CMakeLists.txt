@@ -1,32 +1,22 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(RedisDiy VERSION 0.1.0 LANGUAGES CXX)
+project(Rediy VERSION 0.1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_library(RedisDiy_core STATIC
-    src/core.cpp
-)
-
-target_include_directories(RedisDiy_core PUBLIC
-    "${CMAKE_CURRENT_SOURCE_DIR}/src"
-)
-
-add_executable(RedisDiy
+add_executable(Rediy
     src/main.cpp
 )
 
-target_link_libraries(RedisDiy PRIVATE RedisDiy_core)
+set_target_properties(Rediy PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+)
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
-    foreach(target RedisDiy_core RedisDiy)
-        target_compile_options(${target} PRIVATE
-            -Wall -Wextra -Wpedantic -Wconversion -Wshadow
-        )
-    endforeach()
-endif()
+target_compile_options(Rediy PRIVATE
+    -Wall -Wextra -Wpedantic -Wconversion -Wshadow
+)
 
 include(CTest)
 
@@ -42,21 +32,22 @@ if(BUILD_TESTING)
 
     FetchContent_MakeAvailable(googletest)
 
-    add_executable(RedisDiy_tests
+    add_executable(Rediy_tests
         tests/smoke_test.cpp
     )
 
-    target_link_libraries(RedisDiy_tests PRIVATE
-        RedisDiy_core
+    set_target_properties(Rediy_tests PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+    )
+
+    target_link_libraries(Rediy_tests PRIVATE
         GTest::gtest_main
     )
 
-    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
-        target_compile_options(RedisDiy_tests PRIVATE
-            -Wall -Wextra -Wpedantic -Wconversion -Wshadow
-        )
-    endif()
+    target_compile_options(Rediy_tests PRIVATE
+        -Wall -Wextra -Wpedantic -Wconversion -Wshadow
+    )
 
     include(GoogleTest)
-    gtest_discover_tests(RedisDiy_tests)
+    gtest_discover_tests(Rediy_tests)
 endif()

@@ -1,6 +1,6 @@
-# RedisDiy
+# Rediy
 
-RedisDiy is a small Redis-compatible, in-memory key–value server written in C++23. It is a learning project: the goal is to understand networking, protocol parsing, and server design by building each piece by hand.
+Rediy is a small Redis-compatible, in-memory key–value server written in C++23. It is a learning project: the goal is to understand networking, protocol parsing, and server design by building each piece by hand.
 
 It speaks a subset of RESP2 over TCP, so `redis-cli` can talk to it.
 
@@ -23,7 +23,7 @@ Command names are case-insensitive. Planned later: `SET` options `EX`, `PX`, `NX
 
 ## Not supported
 
-Persistence, replication, clustering, auth, TLS, pub/sub, transactions, lists/hashes/sets, inline (plain-text) commands, and multithreaded command execution. RedisDiy has no auth and binds to localhost only; do not expose it to a network.
+Persistence, replication, clustering, auth, TLS, pub/sub, transactions, lists/hashes/sets, inline (plain-text) commands, and multithreaded command execution. Rediy has no auth and binds to localhost only; do not expose it to a network.
 
 ## Build and run
 
@@ -34,10 +34,17 @@ The first configure downloads GoogleTest, so internet access is required.
 cmake --preset debug
 cmake --build --preset debug
 ctest --preset debug
-./build/debug/RedisDiy
+./build/debug/bin/Rediy
 ```
 
-Replace `debug` with `release` for an optimized build.
+Replace `debug` with `release` for an optimized build:
+
+```sh
+cmake --preset release
+cmake --build --preset release
+ctest --preset release
+./build/release/bin/Rediy
+```
 If switching from a previously configured compiler, configure with
 `cmake --fresh --preset debug`.
 

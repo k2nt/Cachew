@@ -8,6 +8,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(Rediy
     src/main.cpp
+    src/logging/logger.cpp
+    src/logging/logger.h
+    src/logging/log_level.h
 )
 
 set_target_properties(Rediy PROPERTIES
@@ -34,6 +37,8 @@ if(BUILD_TESTING)
 
     add_executable(Rediy_tests
         tests/smoke_test.cpp
+        tests/logging_test.cpp
+        src/logging/logger.cpp
     )
 
     set_target_properties(Rediy_tests PROPERTIES

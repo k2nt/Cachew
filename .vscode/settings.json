@@ -1,5 +1,10 @@
 {
     "C_Cpp.default.compilerPath": "/opt/homebrew/bin/g++-16",
     "C_Cpp.default.compileCommands": "${workspaceFolder}/build/debug/compile_commands.json",
-    "C_Cpp.default.cppStandard": "c++23"
+    "C_Cpp.default.cppStandard": "c++23",
+    "C_Cpp.formatting": "clangFormat",
+    "C_Cpp.codeAnalysis.clangTidy.enabled": false,
+    "[cpp]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    }
 }

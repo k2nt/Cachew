@@ -1,6 +1,12 @@
 #include <iostream>
 
+#include "logging/logging.h"
+
 int main()
 {
-    std::cout << "Hello world!\n";
+    Logging::Logger logger{std::cout};
+    logger.LogDebug("Hello world!");
+    logger.LogInfo("This is an info message.");
+    logger.LogWarning("This is a warning message.");
+    logger.LogError("This is an error message.");
 }

@@ -57,6 +57,10 @@ cmake --fresh --preset debug -DCMAKE_C_COMPILER=gcc-15 -DCMAKE_CXX_COMPILER=g++-
 
 `redis-cli` will be needed for manual testing once networking is implemented.
 
+In VS Code, the Microsoft C/C++ extension uses [.clang-format](./.clang-format)
+when you run **Format Document**. Clang-tidy is disabled in the workspace; the
+build still uses GNU g++ and its compiler warnings.
+
 ## Docs
 
 See [DESIGN.md](./DESIGN.md) for the architecture, testing strategy, and milestones.

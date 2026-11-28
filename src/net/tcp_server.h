@@ -28,7 +28,7 @@ public:
     [[nodiscard]] std::uint16_t GetPort() const noexcept;
 
     // Blocks and serves one client at a time, echoing received bytes unchanged.
-    // RESP framing and graceful shutdown are not implemented at this milestone.
+    // RESP framing is not implemented at this milestone.
     void Run();
 
 private:

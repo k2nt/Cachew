@@ -12,7 +12,9 @@ int main()
     {
         Net::TcpServer server{};
         Logging::Logger logger{std::cerr};
+
         logger.LogInfo(std::format("Listening on 127.0.0.1:{}", server.GetPort()));
+
         server.Run();
     }
     catch (const std::exception& error)

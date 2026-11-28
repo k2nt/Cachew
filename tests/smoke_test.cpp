@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
-TEST(ProjectSetup, SmokeTest) {
+TEST(ProjectSetup, SmokeTest)
+{
     SUCCEED();
 }

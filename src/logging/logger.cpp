@@ -36,7 +36,8 @@ void Logger::Log(LogLevel level, std::string_view message)
     const auto now = std::chrono::floor<std::chrono::seconds>(
         std::chrono::system_clock::now());
 
-    auto levelName = LogLevelToStringView(level);
+    const auto levelName = LogLevelToStringView(level);
+
     const auto color = m_isTerminalColor ? LogLevelTerminalColor(level) : std::string_view{};
     const auto reset = m_isTerminalColor ? RESET : std::string_view{};
 

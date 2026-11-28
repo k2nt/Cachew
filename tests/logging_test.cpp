@@ -11,9 +11,11 @@ TEST(Logging, FormatsColoredAndPlainLogLines)
     const struct
     {
         void (Logging::Logger::*log)(std::string_view);
+
         std::string_view colorPattern;
         std::string_view level;
-    } cases[] = {
+    } cases[] =
+    {
         {&Logging::Logger::LogDebug, "\033\\[36m", "DEBUG"},
         {&Logging::Logger::LogInfo, "", "INFO"},
         {&Logging::Logger::LogWarning, "\033\\[33m", "WARNING"},
@@ -26,6 +28,7 @@ TEST(Logging, FormatsColoredAndPlainLogLines)
         {
             SCOPED_TRACE(testCase.level);
             SCOPED_TRACE(useColor);
+
             std::ostringstream output;
             Logging::Logger logger{output, useColor};
 
@@ -35,11 +38,14 @@ TEST(Logging, FormatsColoredAndPlainLogLines)
             pattern += R"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z \[)";
             pattern += testCase.level;
             pattern += R"(\] message)";
+
             if (useColor)
             {
                 pattern += "\033\\[0m";
             }
+
             pattern += '\n';
+
             EXPECT_TRUE(std::regex_match(output.str(), std::regex(pattern)))
                 << output.str();
         }

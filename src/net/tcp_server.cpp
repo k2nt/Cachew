@@ -9,7 +9,7 @@
 #include <sys/socket.h>
 
 #include "tcp_server.h"
-#include "../logging/logger.h"
+#include "../logging/logging.h"
 
 namespace Net
 {
@@ -22,7 +22,7 @@ TcpServer::TcpServer(std::uint16_t port, std::uint16_t backlog)
     if (!this->m_listener.Valid())
     {
         throw std::system_error(
-            errno, 
+            errno,
             std::generic_category(),
             "Failed to create socket");
     }
@@ -35,7 +35,7 @@ TcpServer::TcpServer(std::uint16_t port, std::uint16_t backlog)
         SO_REUSEADDR,
         &enabled,
         sizeof(enabled));
-    
+
     if (optResult == -1)
     {
         throw std::system_error(
@@ -62,7 +62,9 @@ TcpServer::TcpServer(std::uint16_t port, std::uint16_t backlog)
             "Failed to bind socket");
     }
 
-    if (::listen(m_listener.Get(), m_backlog) == -1)
+    const int listenResult = ::listen(m_listener.Get(), m_backlog);
+
+    if (listenResult == -1)
     {
         throw std::system_error(
             errno,
@@ -71,16 +73,20 @@ TcpServer::TcpServer(std::uint16_t port, std::uint16_t backlog)
     }
 
     socklen_t addressLength = sizeof(address);
-    if (::getsockname(
+
+    const int addressResult = ::getsockname(
         m_listener.Get(),
         reinterpret_cast<sockaddr*>(&address),
-        &addressLength) == -1)
+        &addressLength);
+
+    if (addressResult == -1)
     {
         throw std::system_error(
             errno,
             std::generic_category(),
             "Failed to obtain listening port");
     }
+
     m_port = ntohs(address.sin_port);
 }
 
@@ -96,6 +102,7 @@ void TcpServer::Run()
     for (;;)
     {
         UniqueFd client{::accept(m_listener.Get(), nullptr, nullptr)};
+
         if (!client.Valid())
         {
             if (errno == EINTR)
@@ -107,6 +114,7 @@ void TcpServer::Run()
                 errno,
                 std::generic_category(),
                 "Failed to accept client").what());
+
             // Avoid a busy retry loop when descriptors or socket buffers run out.
             std::this_thread::sleep_for(std::chrono::milliseconds{100});
             continue;
@@ -127,12 +135,15 @@ void TcpServer::HandleClient(const UniqueFd& client)
 {
 #ifdef SO_NOSIGPIPE
     const int enabled = 1;
-    if (::setsockopt(
+
+    const int optResult = ::setsockopt(
         client.Get(),
         SOL_SOCKET,
         SO_NOSIGPIPE,
         &enabled,
-        sizeof(enabled)) == -1)
+        sizeof(enabled));
+
+    if (optResult == -1)
     {
         throw std::system_error(
             errno,
@@ -152,16 +163,19 @@ void TcpServer::HandleClient(const UniqueFd& client)
     for (;;)
     {
         const auto received = ::recv(client.Get(), buffer.data(), buffer.size(), 0);
+
         if (received == 0)
         {
             return;
         }
+
         if (received == -1)
         {
             if (errno == EINTR)
             {
                 continue;
             }
+
             throw std::system_error(
                 errno,
                 std::generic_category(),
@@ -170,6 +184,7 @@ void TcpServer::HandleClient(const UniqueFd& client)
 
         const std::string_view response{buffer.data(), static_cast<std::size_t>(received)};
         std::size_t sent = 0;
+
         while (sent < response.size())
         {
             const auto written = ::send(
@@ -177,23 +192,27 @@ void TcpServer::HandleClient(const UniqueFd& client)
                 response.data() + sent,
                 response.size() - sent,
                 sendFlags);
+
             if (written == -1)
             {
                 if (errno == EINTR)
                 {
                     continue;
                 }
+
                 throw std::system_error(
                     errno,
                     std::generic_category(),
                     "Failed to send to client");
             }
+
             if (written == 0)
             {
                 throw std::system_error(
                     std::make_error_code(std::errc::io_error),
                     "Sending to client made no progress");
             }
+
             sent += static_cast<std::size_t>(written);
         }
     }

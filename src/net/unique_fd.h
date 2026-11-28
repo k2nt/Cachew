@@ -22,7 +22,9 @@ public:
     UniqueFd(UniqueFd&& other) noexcept;
     UniqueFd& operator=(UniqueFd&& other) noexcept;
 
-    [[nodiscard]] int Get() noexcept;
+    [[nodiscard]] int Get() const noexcept;
+
+    [[nodiscard]] bool Valid() const noexcept;
 };
 
 }

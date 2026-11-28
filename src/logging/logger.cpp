@@ -40,8 +40,13 @@ void Logger::Log(LogLevel level, std::string_view message)
     const auto color = m_isTerminalColor ? LogLevelTerminalColor(level) : std::string_view{};
     const auto reset = m_isTerminalColor ? RESET : std::string_view{};
 
-    m_output << std::format("{}{:%FT%TZ} [{}] {}{}\n",
-        color, now, levelName, message, reset);
+    m_output << std::format(
+        "{}{:%FT%TZ} [{}] {}{}\n",
+        color,
+        now,
+        levelName,
+        message,
+        reset);
 }
     
 }

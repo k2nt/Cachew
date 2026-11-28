@@ -1,0 +1,38 @@
+name: Unit tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  unit-tests:
+    name: unit-tests
+    runs-on: ubuntu-24.04
+    container: gcc:16
+    timeout-minutes: 15
+
+    steps:
+      - name: Install build tools
+        run: |
+          apt-get update
+          apt-get install --yes --no-install-recommends cmake ninja-build git ca-certificates
+
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Configure
+        run: >
+          cmake --preset debug
+          -DCMAKE_C_COMPILER=gcc
+          -DCMAKE_CXX_COMPILER=g++
+
+      - name: Build
+        run: cmake --build --preset debug
+
+      - name: Run tests
+        run: ctest --preset debug --timeout 20
